@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "../styles/App.css"
+import "../styles/App.css";
 
 const WORD_LIST = ['apple', 'banana', 'cherry', 'grape', 'orange'];
 
@@ -10,20 +10,59 @@ function App() {
   const [result, setResult] = useState('');
   const [index, setIndex] = useState(0);
 
+  useEffect(() => {
+    setWord(WORD_LIST[index]);
+    const timer = setTimeout(() => {
+      setFlashWord(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [index]);
+
+  const handleInputChange = (e) => {
+    setUserInput(e.target.value);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setResult(userInput === word ? 'You Won!' : 'You Lost!');
+    setFlashWord(false);
+    setUserInput('');
+  };
+
+  const handleRestartClick = () => {
+    setIndex((prevIndex) => (prevIndex + 1) % WORD_LIST.length);
+    setResult('');
+    setFlashWord(true);
+  };
 
   return (
-    <div class="mini-game-container">
-      <h2 class="mini-game-title">Mini Game</h2>
-      <p class="mini-game-word">{word}</p>
-      <form class="mini-game-form" onSubmit={handleFormSubmit}>
-        <input class="mini-game-input" type="text" value={userInput} onChange={handleInputChange} />
-        <button class="mini-game-button" type="submit">Check Answer</button>
-      </form>
-      {result && (
+    <div className="mini-game-container">
+      <h2 className="mini-game-title">Mini Game</h2>
+      {flashWord ? (
+        <p className="mini-game-word">{word}</p>
+      ) : result ? (
         <>
-          <p class="mini-game-result">{result}</p>
-          <button class="mini-game-restart-button" onClick={handleRestartClick}>Restart</button>
+          <p className="mini-game-result">{result}</p>
+          <button
+            className="mini-game-restart-button"
+            onClick={handleRestartClick}
+          >
+            Restart
+          </button>
         </>
+      ) : (
+        <form className="mini-game-form" onSubmit={handleFormSubmit}>
+          <input
+            className="mini-game-input"
+            type="text"
+            value={userInput}
+            onChange={handleInputChange}
+            autoFocus
+          />
+          <button className="mini-game-button" type="submit">
+            Check Answer
+          </button>
+        </form>
       )}
     </div>
   );
