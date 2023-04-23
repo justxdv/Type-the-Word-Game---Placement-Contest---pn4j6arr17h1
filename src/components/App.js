@@ -24,7 +24,7 @@ function App() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    setResult(userInput === word ? 'You Won!' : 'You Lost!');
+    setResult(userInput === word ? 'You Won !' : 'You Lost !');
     setFlashWord(false);
     setUserInput('');
   };
