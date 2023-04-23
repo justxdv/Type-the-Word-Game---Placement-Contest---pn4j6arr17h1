@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "../styles/App.css";
+import "../styles/App.css"
 
 const WORD_LIST = ['apple', 'banana', 'cherry', 'grape', 'orange'];
 
@@ -24,8 +24,7 @@ function App() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    setResult(userInput === word ? 'You Won !' : 'You Lost !');
-    setFlashWord(false);
+    setResult(userInput === word ? 'You Won!' : 'You Lost!');
     setUserInput('');
   };
 
@@ -38,31 +37,16 @@ function App() {
   return (
     <div className="mini-game-container">
       <h2 className="mini-game-title">Mini Game</h2>
-      {flashWord ? (
-        <p className="mini-game-word">{word}</p>
-      ) : result ? (
+      <p className="mini-game-word" style={{ display: flashWord ? 'block' : 'none' }}>{word}</p>
+      <form className="mini-game-form" onSubmit={handleFormSubmit} style={{ display: flashWord || result ? 'none' : 'block' }}>
+        <input className="mini-game-input" type="text" value={userInput} onChange={handleInputChange} />
+        <button className="mini-game-button" type="submit">Check Answer</button>
+      </form>
+      {result && (
         <>
           <p className="mini-game-result">{result}</p>
-          <button
-            className="mini-game-restart-button"
-            onClick={handleRestartClick}
-          >
-            Restart
-          </button>
+          <button className="mini-game-restart-button" onClick={handleRestartClick}>Restart</button>
         </>
-      ) : (
-        <form className="mini-game-form" onSubmit={handleFormSubmit}>
-          <input
-            className="mini-game-input"
-            type="text"
-            value={userInput}
-            onChange={handleInputChange}
-            autoFocus
-          />
-          <button className="mini-game-button" type="submit">
-            Check Answer
-          </button>
-        </form>
       )}
     </div>
   );
