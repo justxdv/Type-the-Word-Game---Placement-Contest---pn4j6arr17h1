@@ -11,37 +11,51 @@ function App() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    setWord(WORD_LIST[index]);
-    const timer = setTimeout(() => {
+    const timeout = setTimeout(() => {
       setFlashWord(false);
     }, 500);
-    return () => clearTimeout(timer);
+
+    return () => clearTimeout(timeout);
+  }, [word]);
+
+  useEffect(() => {
+    setWord(WORD_LIST[index]);
+    setFlashWord(true);
+    setUserInput('');
+    setResult('');
   }, [index]);
 
-  const handleInputChange = (e) => {
-    setUserInput(e.target.value);
+  const handleInputChange = (event) => {
+    setUserInput(event.target.value);
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    setResult(userInput === word ? 'You Won!' : 'You Lost!');
-    setUserInput('');
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    if (userInput.toLowerCase() === word.toLowerCase()) {
+      setResult('You won!');
+    } else {
+      setResult('You lost!');
+    }
   };
 
   const handleRestartClick = () => {
-    setIndex((prevIndex) => (prevIndex + 1) % WORD_LIST.length);
-    setResult('');
-    setFlashWord(true);
+    if (index === WORD_LIST.length - 1) {
+      setIndex(0);
+    } else {
+      setIndex(index + 1);
+    }
   };
 
   return (
     <div className="mini-game-container">
       <h2 className="mini-game-title">Mini Game</h2>
-      <p className="mini-game-word" style={{ display: flashWord ? 'block' : 'none' }}>{word}</p>
-      <form className="mini-game-form" onSubmit={handleFormSubmit} style={{ display: flashWord || result ? 'none' : 'block' }}>
-        <input className="mini-game-input" type="text" value={userInput} onChange={handleInputChange} />
-        <button className="mini-game-button" type="submit">Check Answer</button>
-      </form>
+      {flashWord && <p className="mini-game-word">{word}</p>}
+      {!flashWord && (
+        <form className="mini-game-form" onSubmit={handleFormSubmit}>
+          <input className="mini-game-input" type="text" value={userInput} onChange={handleInputChange} />
+          <button className="mini-game-button" type="submit">Check Answer</button>
+        </form>
+      )}
       {result && (
         <>
           <p className="mini-game-result">{result}</p>
